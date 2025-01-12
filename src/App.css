@@ -1,0 +1,214 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #512B2B;
+  min-height: 100vh;
+  padding: 1%;
+  box-sizing: border-box;
+}
+
+.inputBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #EE7023;
+  padding: 1%;
+  border-radius: 10px;
+  box-sizing: border-box;
+  margin: 1%;
+  margin-bottom: 2%;
+  height: auto;
+  width: 100%;
+  max-width: 35%;
+  height: 100%;
+}
+
+.graphBox {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1%;
+  border-radius: 10px;
+  background-color: #EE7023;
+  box-sizing: border-box;
+  margin: 1%;
+  height: auto;
+  width: 100%;
+  max-width: 65%;
+  height: 100%;
+}
+
+.input {
+  box-sizing: border-box;
+  flex-direction: column;
+  background-color: #EBF8F2;
+  margin: 1%;
+  width: 70%;
+  height: 40%;
+}
+
+p {
+  margin: 1%;
+  font-weight: bold;
+  padding-right: 2%;
+  font-size: 1em;
+}
+
+a {
+  font-size: 1em;
+  margin-left: 1%;
+  margin-top: 0.1%;
+}
+
+.innerInputBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FDC129;
+  border-radius: 10px;
+  margin-bottom: 2%;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.lowerGraphBox {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FDC129;
+  border-radius: 10px;
+  padding: 2%;
+  margin: 2%;
+  height: 30%;
+}
+
+.titleBox {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  background-color: #FDC129;
+  border-radius: 10px;
+  margin-bottom: 1%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 0 1 auto;
+  box-sizing: border-box;
+}
+
+.upperGraphBox {
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FDC129;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2%;
+  margin: 2%;
+  height: 60%;
+}
+
+.outputBox {
+  width: 80%;
+  height: auto;
+  background-color: #EBF8F2;
+  align-items: center;
+  border: 3% solid black;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1%;
+  font-size: 1em;
+}
+
+.chart-container {
+  height: 100%;
+  width: 100%;
+  margin-bottom: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+  align-items: center;
+}
+
+.QA {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #FDC129;
+  border-radius: 10px;
+  margin-bottom: 2%;
+  flex: 1;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+
+/* Media Queries */
+@media (max-width: 1200px) {
+  .inputBox, .graphBox {
+    width: 100%;
+    max-width: 100%;
+    margin: 1% 0;
+  }
+
+  .titleBox {
+    font-size: 1.2em;
+  }
+
+  .upperGraphBox, .lowerGraphBox {
+    padding: 1%;
+    margin: 1%;
+  }
+}
+
+@media (max-width: 768px) {
+  .inputBox, .graphBox {
+    flex-direction: column;
+  }
+
+  .titleBox {
+    font-size: 1em;
+  }
+
+  .upperGraphBox, .lowerGraphBox {
+    padding: 1%;
+    margin: 1%;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleBox {
+    font-size: 0.8em;
+  }
+
+  .upperGraphBox, .lowerGraphBox {
+    padding: 1%;
+    margin: 1%;
+  }
+
+  .QA p {
+    font-size: 0.8em; /* Adjust font size for smaller screens */
+  }
+
+  .QA input {
+    font-size: 0.8em; /* Adjust input font size for smaller screens */
+  }
+  .QA a {
+    font-size: 0.8em; /* Adjust input font size for smaller screens */
+  }
+  .outputBox p {
+    font-size: 0.8em; /* Adjust input font size for smaller screens */
+  }
+}
