@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import './api.js';
+
+import {
+  fetchRateAPI,
+  fetchPropertyIndexAPI,
+  calculateYearlyGrowth
+} from './api.js';
 
 // Chart.js setup
 import Chart from "chart.js/auto";
@@ -16,12 +23,12 @@ import {
   setMonthlyCosts,
   setMorgetgeProcent,
   setYears,
-  calculateSavingsBuy,
-  calculateSavingsRent,
   calculateSavingsTotal,
   setYearlyValueIncreaseApt,
   YearlySavingsRent,
-  YearlySavingsBuy
+  YearlySavingsBuy,
+  getSumOfBuy,
+  getSumOfRent
 } from './inputHandler';
 
 Chart.register(CategoryScale);
@@ -37,47 +44,75 @@ function App() {
   const [monthlyCosts, updateMonthlyCosts] = useState('');
   const [morgetgeProcent, updateMorgetgeProcent] = useState('');
   const [years, updateYears] = useState('');
+
+
   const [yearlyValueIncreaseApt, updateYearlyValueIncreaseApt] = useState('');
 
-  const [savingsBuy, updateSavingsBuy] = useState('');
-  const [savingsRent, updateSavingsRent] = useState('');
+// the lists of yearly increase
   const [savingsTotal, updateSavingsTotal] = useState('');
+
+// the total of savings and renting
+  const [savingsRentSum, updateSumRent] = useState('');
+  const [savingsBuySum, updateSumBuy] = useState('');
+
 
   const [chartDataRent, setChartDataRent] = useState([]); // Initialize chartData as an empty array
   const [chartDataBuy, setChartDataBuy] = useState([]); // Initialize chartData as an empty array
 
+  const [rateAPI, setRateAPI] = useState([]);
+  const [propertyIndexAPI, setPropertyIndex] = useState([]);
 
-  const data = {
-    labels: chartDataRent.map((_, index) => `År ${index}`),
-    datasets: [
-        {
-            label: 'Hyresrätt',
-            data: chartDataRent,
-            borderColor: [
-                '#257886'
-            ],
-            backgroundColor: [
-               '#257886'
-          ],
-            borderWidth: 2,
-        },
-        {
-          label: 'Bostadsrätt',
-          data: chartDataBuy,
-          backgroundColor: [
-              '#477D17'
-          ],
-          borderColor: [
-              '#477D17'
-          ],
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const rate = await fetchRateAPI();
+      setRateAPI(rate);
+    };
+    fetchData();
+  }, []); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const rate = await fetchPropertyIndexAPI();
+      setPropertyIndex(rate);
+    };
+    fetchData();
+  }, []); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const rate = await fetchPropertyIndexAPI();
+        setPropertyIndex(rate);
+
+        const growthData = calculateYearlyGrowth(rate);
+        console.log("Yearly Growth Data:", growthData);
+    };
+    fetchData();
+}, []);
+
+
+const data = {
+  labels: chartDataRent.map((_, index) => `År ${index}`),
+  datasets: [
+      {
+          label: 'Hyresrätt',
+          data: chartDataRent, 
+          borderColor: 'pink',  // Change line color to black
+          backgroundColor: 'pink', // Change fill to white
           borderWidth: 2,
-      }
-    ]
+      },
+      {
+        label: 'Bostadsrätt',
+        data: chartDataBuy,
+        borderColor: 'white',  // Change line color to black
+        backgroundColor: 'white', // Change fill to white
+        borderWidth: 2,
+    }
+  ]
 };
 
-
 //------------------------------------------------
-// handling of the rent inputs
+// handling of the rent chart inputs
 
 const handleChartDataRent = () => {
   const newValue = YearlySavingsRent();
@@ -85,16 +120,18 @@ const handleChartDataRent = () => {
 };
 
 const handleChartDataBuy = () => {
-
   const newValue = YearlySavingsBuy();
   setChartDataBuy(newValue);
-
 };
+
+ 
+  //-----------------------------------------------------------
+  // input from user start
 
   const handleRentAmountRENT = (e) => {
     const newValue = e.target.value;
     updateRentAmount(newValue);
-    setRentAmount(newValue); // This updates the rent amount in the handler
+    setRentAmount(newValue); 
   };
 
   const handleRentIncreaseChange = (e) => {
@@ -103,13 +140,6 @@ const handleChartDataBuy = () => {
     setRentIncrease(newValue);
   };
 
-  const handlecalculateSavingsRent = () => {
-    const total = calculateSavingsRent();
-    updateSavingsRent(total);
-  };
-
-  //------------------------------------------
-  // handling of the buy option inputs
 
   const handleBuyCost = (e) =>
   {
@@ -157,40 +187,47 @@ const handleChartDataBuy = () => {
     setYears(newValue);
   };
 
+// input from user end
+  //-----------------------------------------------------------
+
   const handlecalculateSavingsBuy= () => {
-    const total = calculateSavingsBuy();
-    updateSavingsBuy(total);
+    const total = getSumOfBuy();
+    const roundedTotal = Math.round(total); // Store the rounded value
+    updateSumBuy(roundedTotal); // Update state with the rounded value
   };
 
-  const handlecalculateSavingsTotal = () => {
-    const total = calculateSavingsTotal();
-    updateSavingsTotal(total);
-  };
+  const handleFinalSavingsRent = () => {
+    const total = getSumOfRent();
+    const roundedTotal = Math.round(total); // Store the rounded value
+    updateSumRent(roundedTotal); // Update s
+};
+
+
+const handlecalculateSavingsTotal = () => {
+  const total = calculateSavingsTotal();
+  updateSavingsTotal(total);
+};
 
   // den här är för att knappen ska ta in två på en gång
   const handleCalculateSavings = () => {
-    handlecalculateSavingsRent();
     handlecalculateSavingsBuy();
     handlecalculateSavingsTotal();
     handleChartDataRent();
     handleChartDataBuy();
+    handleFinalSavingsRent();
     
 };
-
-
-
 //---------------------------------------------
-  
   return (
     <div className="container">
-
+       <img src="https://www.exsitec.se/hubfs/Web%20gradients/background.webp" 
+             className="backgroundImage"
+             />
       <div className="inputBox">
-
         <div className='titleBox'>
         <p>Att hyra en bostad (SEK)</p>
         </div>
           <div className='innerInputBox'>
-
             <div className='QA'>
               <p>Månadshyran</p>
                 <input
@@ -201,7 +238,6 @@ const handleChartDataBuy = () => {
                   onChange={handleRentAmountRENT}
                 />
             </div>
-
             <div className='QA'>
                 <p>Ökning av månadshyra varje år?</p>
                     <input
@@ -211,17 +247,14 @@ const handleChartDataBuy = () => {
                     value={rentIncrease}
                     onChange={handleRentIncreaseChange}
                   />
-
             </div>
           </div> {/* Upper input box */}
-
           <div className='titleBox'>
               <p>Att köpa en bostad (SEK)</p>
             </div>
           <div className='innerInputBox'>
                   <div className='QA'>
                   <p>Hur mycket kostar bostaden?</p>
-                  
                   <input
                     type="text"
                     placeholder="Ex, 3000000"
@@ -243,8 +276,6 @@ const handleChartDataBuy = () => {
                   />
                   <a target="_blank" href='https://www.mynewsdesk.com/se/svensk_fastighetsformedling/pressreleases/historisk-aaterblick-paa-bomarknaden-saa-har-sveriges-bostadspriser-utvecklats-de-senaste-20-aaren-2432578'>Bostadsökning</a>
                   </div>
-
-                
                   <div className='QA'>
                     <p>Hur många procent ligger boräntan på (fast)?</p>
                   <input
@@ -256,8 +287,6 @@ const handleChartDataBuy = () => {
               />
              <a target="_blank" href='https://www.finansportalen.se/borantor/'>Ränta</a>  
             </div>
-
-
                 <div className='QA'>
                 <p>Vad är din kontantinsats?</p>
                   <input
@@ -269,8 +298,6 @@ const handleChartDataBuy = () => {
                   />
                  <a target="_blank" href='https://www.handelsbanken.se/sv/ekonomi-i-livet/privatekonomi/boendeekonomi/kopa-bostad/kontantinsats'>Kontantinsats</a>
             </div>
-
-                
                   <div className='QA'>
                   <p>Hur många % betalar du av lånet / år ?</p>
                   <input
@@ -281,9 +308,7 @@ const handleChartDataBuy = () => {
                     onChange={handleMorgetgeProcent}
               />
               <a target="_blank" href='https://www.konsumenternas.se/lan--betalningar/lan/bolan/amorteringskrav/'>Amortering</a>
-             
                   </div>
-
                   <div className='QA'>
                   <p>Hyra och underhållning</p>
                   <input
@@ -293,14 +318,10 @@ const handleChartDataBuy = () => {
                     value={monthlyCosts}
                     onChange={handleMonthlyCosts}
               />
-             
-                
                   </div>
-          </div>{/* Lower input box */}
-
-          <div className='QA'>
+                  <div className='QA'>
             <p>Välj tidshorisont (år) och jämför!</p>
-            <div className='year'>
+            <div>
             <input
                     type="text"
                     placeholder="Ex, 3 eller 15 "
@@ -312,12 +333,17 @@ const handleChartDataBuy = () => {
                   </div>
                     
             </div>
+
+
+          </div>{/* Lower input box */}
+
+          
       </div> {/* Input box*/}
 
 
       <div className="graphBox">
 
-        <div className='titleBox'>
+        <div className='titleBoxTest'>
           <p>Ökning av investering / år</p>
         </div>
 
@@ -327,21 +353,33 @@ const handleChartDataBuy = () => {
        
         <div className='lowerGraphBox'>
           <div className='outputBox'>
-            <p>Ökning av hyresrätt : {savingsRent}</p>
-            </div>
+          <p>Ökning av hyresrätt : {new Intl.NumberFormat().format(Math.trunc(savingsRentSum))} kr</p>
+          </div>
             
             <div className='outputBox'>
-            <p>Ökning av bostadsrätt : {savingsBuy}</p>
+            <p>Ökning av bostadsrätt : {new Intl.NumberFormat().format(Math.trunc(savingsBuySum))} kr</p>
             
             </div>
             <div className='outputBox'>
-            <p>Skillnaden: {savingsTotal}</p>
+            <p>Skillnaden: {new Intl.NumberFormat().format(Math.trunc(savingsTotal))} kr</p>
             
             </div>
         </div>{/* lowerGraphBox*/}
-
+        <div className='lowerGraphBox'>
+          <div className='outputBox'>
+            <p> Ränta :  {rateAPI ? rateAPI : "Loading..."}</p>
+            </div>
+            <div className='outputBox'>
+              <div className="yearlyGrowthContainer">
+                {calculateYearlyGrowth(propertyIndexAPI).map(entry => (
+                  <span key={entry.year} className="growthItem">
+                    {entry.year}: {entry.growthPercentage}%
+                  </span>
+                ))}
+              </div>
+            </div>
+        </div>{/* lowerGraphBox*/}
       </div> {/* graph box*/}
-      
     </div> // container
   );
 }

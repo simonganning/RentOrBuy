@@ -1,43 +1,74 @@
 .container {
   display: flex;
-  flex-wrap: wrap;
-  background-color: #512B2B;
-  min-height: 100vh;
+  flex-wrap: nowrap; 
+  justify-content: space-between;
+  align-items: stretch; 
+  max-height: 100vh;
+  height: 100vh; 
+  width: 100vw;  
   padding: 1%;
+
   box-sizing: border-box;
 }
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  object-fit: cover; 
+  z-index: -1; 
+}
+
 
 .inputBox {
-  flex: 1;
+  flex: 0.9;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #EE7023;
+  background-color: #181367;
   padding: 1%;
   border-radius: 10px;
   box-sizing: border-box;
   margin: 1%;
-  margin-bottom: 2%;
-  height: auto;
-  width: 100%;
   max-width: 35%;
   height: 100%;
 }
 
 .graphBox {
-  flex: 2;
+  flex: 0.9;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1%;
   border-radius: 10px;
-  background-color: #EE7023;
+  background-color: #181367;
   box-sizing: border-box;
   margin: 1%;
-  height: auto;
   width: 100%;
   max-width: 65%;
   height: 100%;
+  margin-bottom: 2%;
+  padding: 1%;
+}
+
+.titleBoxTest
+{
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #000000;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  background-color: #7e5eda;
+  border-radius: 10px;
+  margin: 1%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 0 1 auto;
+  box-sizing: border-box;
+  width: 95%;
+
 }
 
 .input {
@@ -46,7 +77,7 @@
   background-color: #EBF8F2;
   margin: 1%;
   width: 70%;
-  height: 40%;
+  height: 60%;
 }
 
 p {
@@ -67,56 +98,54 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #FDC129;
+  background-color: #181367;
   border-radius: 10px;
   margin-bottom: 2%;
   flex: 1;
   box-sizing: border-box;
 }
+.upperGraphBox {
+  width: 95%;
+  flex: 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #7e5eda;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 1%;
+}
 
 .lowerGraphBox {
   width: 95%;
+  flex: 0.5; 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #FDC129;
+  background-color: #7e5eda;
   border-radius: 10px;
-  padding: 2%;
-  margin: 2%;
-  height: 30%;
+  margin: 1%;
+  padding-top: 1%;
 }
 
 .titleBox {
   font-size: 1.5em;
   font-weight: bold;
-  color: #333;
+  color: #070707;
   width: 100%;
   display: flex;
   flex-direction: column;
   text-align: center;
   justify-content: center;
-  background-color: #FDC129;
+  background-color: #7e5eda;
   border-radius: 10px;
-  margin-bottom: 1%;
+  margin: 1%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: 0 1 auto;
   box-sizing: border-box;
 }
 
-.upperGraphBox {
-  width: 95%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #FDC129;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 2%;
-  margin: 2%;
-  height: 60%;
-}
 
 .outputBox {
   width: 80%;
@@ -133,10 +162,9 @@ a {
 }
 
 .chart-container {
-  height: 100%;
+  height: 84%;
   width: 100%;
-  margin-bottom: 5%;
-  margin-left: 5%;
+  margin-left: 15%;
   margin-right: 5%;
   align-items: center;
 }
@@ -146,12 +174,27 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #FDC129;
+  background-color: #7e5eda;
   border-radius: 10px;
   margin-bottom: 2%;
   flex: 1;
   box-sizing: border-box;
   font-size: 1em;
+}
+.yearlyGrowthContainer {
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 10px; 
+  justify-content: center; 
+  padding: 10px;
+}
+
+.growthItem {
+  background-color: #7e5eda; 
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  white-space: nowrap; 
 }
 
 
@@ -199,16 +242,16 @@ a {
   }
 
   .QA p {
-    font-size: 0.8em; /* Adjust font size for smaller screens */
+    font-size: 0.8em; 
   }
 
   .QA input {
-    font-size: 0.8em; /* Adjust input font size for smaller screens */
+    font-size: 0.8em; 
   }
   .QA a {
-    font-size: 0.8em; /* Adjust input font size for smaller screens */
+    font-size: 0.8em;
   }
   .outputBox p {
-    font-size: 0.8em; /* Adjust input font size for smaller screens */
+    font-size: 0.8em;
   }
 }

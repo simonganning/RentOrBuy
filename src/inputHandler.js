@@ -11,15 +11,10 @@ let apartmentIncRate  = 0;
 let morgetgeProcent  = 0; 
 let years = 0;
 //---------------------------
-let buySavings = 0;
-let sumOfMoneyBuy = 0;
-let sumRentSavings = 0;
-let CAGR = 1.09;
-let ISK = 0.99; // 9 procent increase in yearly savings at OMX30
-let change = ISK*CAGR;
 
-let savingsPerYearRent = []; // Array to hold savings for each year
-let savingsPerYearBuy = [];
+let CAGR = 1.09;  // yearly return on the stock market
+let ISK = 0.99; // 9 procent increase in yearly savings at OMX30
+let change = ISK*CAGR; 
 
 
 export const setRentAmount = (value) => {
@@ -31,87 +26,6 @@ export const setRentIncrease = (value) => {
     rentIncreaseRENT = parseFloat(value);
     return rentIncreaseRENT;
 };
-
-//----------------------
-
-export const calculateSavingsRent = () => {
-    // Calculating the total rent with increase
-    sumRentSavings = downPaymentBUY; // zero when button is pressed twice with same numbers
-    let rentIncreaseRENTMethod = 1 - (rentIncreaseRENT/100);
-    let loan = buyAmountBUY - downPaymentBUY;
-    //sumRentSavings = downPaymentBUY;
-    let yearlySavings = 0;
-    // rent and morgetge payback
-    let monthlyPayBack = (loan*(interestRate/100))/12 + (loan*morgetgeProcent/100)/12 ; 
-    let monthlySavings = monthlyCostsBUY + monthlyPayBack - rentCostRENT;
-    // the monthly savings for a renter is the overflow money from a buyers mortege and interest rate payment
-    monthlySavings = (monthlyCostsBUY + monthlyPayBack - rentCostRENT);
-    yearlySavings = monthlySavings*12;
-    // if the montlhy savings are negative we only make money on the first invesment 
-    if (monthlySavings <= 0)
-    {
-        for ( let i =0; i < years; i++)
-            {
-                sumRentSavings = sumRentSavings*change;
-                
-            }
-    } else 
-    {
-        for ( let i =0; i < years; i++)
-            {
-            
-                sumRentSavings = (sumRentSavings +yearlySavings)*change*rentIncreaseRENTMethod;
-            }
-    }
-
-      let rentSavingsDisplay = new Intl.NumberFormat().format(Math.trunc(sumRentSavings-downPaymentBUY));
-
-    return rentSavingsDisplay + " kr";
-};
-
-export const YearlySavingsRent = () =>
-{
-    savingsPerYearRent = [0];
-    sumRentSavings = downPaymentBUY; // zero when button is pressed twice with same numbers
-    let rentIncreaseRENTMethod = 1 - (rentIncreaseRENT/100);
-    let loan = buyAmountBUY - downPaymentBUY;
-    //sumRentSavings = downPaymentBUY;
-    let yearlySavings = 0;
-   
-
-
-    // rent and morgetge payback
-    let monthlyPayBack = (loan*(interestRate/100))/12 + (loan*morgetgeProcent/100)/12 ; 
-    let monthlySavings = monthlyCostsBUY + monthlyPayBack - rentCostRENT;
-    // the monthly savings for a renter is the overflow money from a buyers mortege and interest rate payment
-    monthlySavings = (monthlyCostsBUY + monthlyPayBack - rentCostRENT);
-    yearlySavings = monthlySavings*12;
-    // the monthly savings for a renter is the overflow money from a buyers mortege and interest rate payment
-    
-    // if the montlhy savings are negative we only make money on the first invesment 
-    if (monthlySavings <= 0)
-    {
-        for ( let i =0; i < years; i++)
-            {
-                sumRentSavings = sumRentSavings*change;
-                savingsPerYearRent.push(sumRentSavings-downPaymentBUY); // Push the accumulated savings of each year
-            }
-    } else 
-    {
-        for ( let i =0; i < years; i++)
-            {
-                sumRentSavings = (sumRentSavings +yearlySavings)*change*rentIncreaseRENTMethod;
-                savingsPerYearRent.push(sumRentSavings-downPaymentBUY); // Push the accumulated savings of each year
-            }
-    }
-
-      //let rentSavingsDisplay = new Intl.NumberFormat().format(Math.trunc(sumRentSavings));
-
-    return savingsPerYearRent;
-
-};
-
-//----------------------------------------------
 export const setBuyAmount = (value) => {
     buyAmountBUY = parseFloat(value);
     return buyAmountBUY;
@@ -147,97 +61,90 @@ export const setYears = (value) => {
     return years;
 };
 
+export const YearlySavingsRent = () => {
+    let savingsList = [0]; 
+    let totalInvestment = downPaymentBUY; 
+    let loan = buyAmountBUY - downPaymentBUY;
 
-export const calculateSavingsBuy = () => {
-    let apartmentValue = buyAmountBUY;
-    let loan = buyAmountBUY - downPaymentBUY; // = 2 500 000
-    let totalInterestPaid = 0;
-    let salesTaxRate = 0.78;
-    let totalMontlyCost = monthlyCostsBUY*12*years;
-    let totalMorgetegeRepayment = 0;
-    let apartmentIncRateMethod = (apartmentIncRate/100) + 1;
-    let loanMorgetgeProcent = 1 - (morgetgeProcent/100);
-    let totalExtraSavings =0;
-    let monthlyPayBack = (loan*(interestRate/100))/12;
-    let morgetgeRepayment = (loan*(morgetgeProcent/100))/12;
+    for (let i = 0; i < years; i++) {
+        totalInvestment = totalInvestment * change;
 
-    let surplusRent = rentCostRENT - monthlyCostsBUY - monthlyPayBack - morgetgeRepayment ;
+        let yearlyInterest = loan * (interestRate / 100);
+        let yearlyMortgageRepayment = loan * (morgetgeProcent / 100);
+        let yearlyHousingCosts = yearlyInterest + yearlyMortgageRepayment + (monthlyCostsBUY * 12);
+        let yearlyRentCost = rentCostRENT * 12;
 
-
-    if (surplusRent > 0)
-    {
-        for (let i =0; i < years ; i++)
-        {
-            totalExtraSavings = (totalExtraSavings + surplusRent*12)*change;
+        if (yearlyHousingCosts > yearlyRentCost) {
+            let surplus = yearlyHousingCosts - yearlyRentCost;
+            totalInvestment = totalInvestment + surplus;
         }
+
+        loan = loan - yearlyMortgageRepayment;
+        rentCostRENT = rentCostRENT * (1 + rentIncreaseRENT / 100);
+        savingsList.push(totalInvestment - downPaymentBUY);
     }
 
-
-    for (let i = 0; i < years; i++) 
-    {
-         // Reducing the loan by the paid mortgage interest
-        apartmentValue = apartmentValue*apartmentIncRateMethod; // Increasing the apartment value annually
-        totalInterestPaid = totalInterestPaid + loan*(interestRate/100);
-        totalMorgetegeRepayment = totalMorgetegeRepayment + loan*morgetgeProcent/100;
-        loan = (loan * loanMorgetgeProcent);
-    }
-
-    let saleProceeds = ((apartmentValue-buyAmountBUY) * (salesTaxRate)); // +buyAmountBUY ; // Assuming saleTaxRate is the percentage deducted from the sale
-    sumOfMoneyBuy = saleProceeds + totalExtraSavings - totalInterestPaid - totalMontlyCost - totalMorgetegeRepayment;
-
-    buySavings = new Intl.NumberFormat().format(Math.trunc(sumOfMoneyBuy));
-
-    return buySavings + " kr";
+    return savingsList;
 };
 
 
 export const YearlySavingsBuy = () => {
-    savingsPerYearBuy = [0];
-    let apartmentValue = buyAmountBUY;
-    let loan = buyAmountBUY - downPaymentBUY; // = 2 500 000
+    let savingsList = [0];
+    let apartmentValue = buyAmountBUY; 
+    let loan = buyAmountBUY - downPaymentBUY; 
     let totalInterestPaid = 0;
-    let salesTaxRate = 0.78;
-    let saleProceeds =0;
-    let yearlyMontlyCost = 0;
-    let totalMorgetegeRepayment = 0;
-    let apartmentIncRateMethod = (apartmentIncRate/100) + 1;
-    let loanMorgetgeProcent = 1 - (morgetgeProcent/100);
+    let totalMortgagePaid = 0;
     let totalExtraSavings = 0;
-    let monthlyPayBack = (loan*(interestRate/100))/12;
-    let morgetgeRepayment = (loan*(morgetgeProcent/100))/12;
+    let totalBalance = 0; 
+    let salesTaxRate = 0.78; 
 
-    let surplusRent = rentCostRENT - monthlyCostsBUY - monthlyPayBack - morgetgeRepayment ;
+    for (let i = 0; i < years; i++) {
+        apartmentValue = apartmentValue * (1 + (apartmentIncRate / 100));
 
-    
-    yearlyMontlyCost = yearlyMontlyCost + monthlyCostsBUY*12;
+        let yearlyInterest = loan * (interestRate / 100);
+        let yearlyMortgageRepayment = loan * (morgetgeProcent / 100);
+        totalInterestPaid += yearlyInterest;
+        totalMortgagePaid += yearlyMortgageRepayment;
 
+        let yearlyHousingCosts = yearlyInterest + yearlyMortgageRepayment + (monthlyCostsBUY * 12);
 
-    for (let i = 0; i < years; i++) 
-    {
-         // Reducing the loan by the paid mortgage interest
-        apartmentValue = apartmentValue*apartmentIncRateMethod; // Increasing the apartment value annually
-        totalInterestPaid = totalInterestPaid + loan*(interestRate/100);
-        totalMorgetegeRepayment = totalMorgetegeRepayment + loan*(morgetgeProcent/100);
-        saleProceeds = ((apartmentValue-buyAmountBUY) * (salesTaxRate));// +buyAmountBUY ;
-        if (surplusRent > 0)
-            {
-                totalExtraSavings = (totalExtraSavings + surplusRent*12)*change;
-            }
-            else {
-                totalExtraSavings =0;
-            }
-        sumOfMoneyBuy = saleProceeds + totalExtraSavings - totalInterestPaid - yearlyMontlyCost - totalMorgetegeRepayment;
-        savingsPerYearBuy.push(sumOfMoneyBuy); 
-        loan = (loan * loanMorgetgeProcent); // kan vara så att den ska ligga ovanför 
+        let saleProceeds = ((apartmentValue - buyAmountBUY) * salesTaxRate) + buyAmountBUY;
+
+        let yearlyRentCost = rentCostRENT * 12;
+        if (yearlyRentCost > yearlyHousingCosts) {
+            totalExtraSavings += (yearlyRentCost - yearlyHousingCosts); 
+        }
+
+        totalBalance = saleProceeds + totalExtraSavings - totalInterestPaid - totalMortgagePaid;
+        savingsList.push(totalBalance - buyAmountBUY);
+        loan = loan - yearlyMortgageRepayment;
     }
 
-   return savingsPerYearBuy;
+    return savingsList;
 };
 
-export const calculateSavingsTotal  = () => {
-    let sum = Math.abs(sumOfMoneyBuy -sumRentSavings);
-    let sumDisplay = new Intl.NumberFormat().format(Math.trunc(sum));
 
-    return sumDisplay + " kr";
+
+export const getSumOfBuy = () => {
+    const savings = YearlySavingsBuy(); 
+    return savings.length > 0 ? savings[savings.length - 1] : 0;
+};
+
+
+//------
+// get the total amount of savings for renting 
+export const getSumOfRent = () => {
+    const savings = YearlySavingsRent();
+    return savings.length > 0 ? savings[savings.length - 1] : 0;
+};
+
+// ---------------- savings
+
+export const calculateSavingsTotal = () => {
+    let buySavings = getSumOfBuy();
+    let rentSavings = getSumOfRent();
+
+    let sum = Math.abs(buySavings - rentSavings);
+    return sum ;
 };
 
